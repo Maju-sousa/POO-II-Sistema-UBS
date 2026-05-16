@@ -7,6 +7,8 @@ para vcs testarem no vscode tem que colocar os arquivos nessa ordem:
 📄 modelos.py
 
 📄 threads.py
+
+
 📂 interface (Pasta dedicada exclusivamente ao visual)
 
 📄 __init__.py
