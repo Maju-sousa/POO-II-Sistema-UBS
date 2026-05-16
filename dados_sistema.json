@@ -1,0 +1,18 @@
+{
+    "pacientes": [
+        {
+            "nome": "maria Júlia de sousa",
+            "cpf": "089 890 45 66 77",
+            "nascimento": "18092005",
+            "telefone": "9998615263"
+        }
+    ],
+    "profissionais": [
+        {
+            "nome": "Luiz andre vasconcelos",
+            "especialidade": "Cirurgião "
+        }
+    ],
+    "ubs": [],
+    "consultas": []
+}
