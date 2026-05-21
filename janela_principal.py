@@ -1,4 +1,3 @@
-# interface/janela_principal.py
 import sys
 from PySide6.QtWidgets import (QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, 
                              QPushButton, QStackedWidget, QLabel, QScrollArea, 
@@ -11,14 +10,15 @@ from gerenciador import GerenciadorSistema
 from modelos import Paciente, Profissional, UBS, Consulta
 from threads import OperacaoArquivoWorker
 
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Sistema de Agendamentos UBS")
         self.resize(1100, 680)
         
-        # 1. Aplicando o estilo global na janela principal
-        self.setStyleSheet(ESTILO_GLOBAL)
+        # 🔥 ESTILO COMPLETO (CORRETO)
+        self.setStyleSheet(ESTILO_GLOBAL + ESTILO_BARRA_LATERAL + ESTILO_COMPONENTES)
         
         self.gerenciador = GerenciadorSistema()
         self.init_ui()
@@ -29,13 +29,14 @@ class MainWindow(QMainWindow):
         layout_principal.setContentsMargins(0, 0, 0, 0)
         layout_principal.setSpacing(0)
         
-        # --- BARRA LATERAL (MENU FIGMA) ---
+        # SIDEBAR
         self.barra_lateral = QFrame()
         self.barra_lateral.setObjectName("BarraLateral")
-        self.barra_lateral.setStyleSheet(ESTILO_BARRA_LATERAL)
         self.barra_lateral.setFixedWidth(240)
+
         layout_menu = QVBoxLayout(self.barra_lateral)
         layout_menu.setContentsMargins(15, 25, 15, 25)
+        layout_menu.setSpacing(10)
         
         lbl_titulo = QLabel("Sistema UBS")
         lbl_titulo.setObjectName("TituloApp")
@@ -43,14 +44,17 @@ class MainWindow(QMainWindow):
         layout_menu.addSpacing(20)
         
         self.botoes_menu = []
-        abas = [("🏠 Dashboard", 0), ("👥 Pacientes", 1), ("🩺 Profissionais", 2), ("🏢 UBS", 3), ("📅 Agendamentos", 4)]
+        abas = [("🏠 Tela Inicial", 0), ("👥 Pacientes", 1), ("🩺 Profissionais", 2), ("🏢 UBS", 3), ("📅 Agendamentos", 4)]
         
         for texto, index in abas:
             btn = QPushButton(texto)
             btn.setObjectName("AbasMenu")
             btn.setCheckable(True)
+            btn.setCursor(Qt.PointingHandCursor)
+
             if index == 0: 
                 btn.setChecked(True)
+
             btn.clicked.connect(lambda checked, idx=index: self.mudar_aba(idx))
             layout_menu.addWidget(btn)
             self.botoes_menu.append(btn)
@@ -60,10 +64,8 @@ class MainWindow(QMainWindow):
         self.progress_bar = QProgressBar()
         self.progress_bar.setFixedHeight(8)
         self.progress_bar.setTextVisible(False)
-        self.progress_bar.setValue(0)
         layout_menu.addWidget(self.progress_bar)
         
-        # --- PAINEL CENTRAL ---
         self.paineis = QStackedWidget()
         
         self.setup_aba_dashboard()
@@ -85,23 +87,29 @@ class MainWindow(QMainWindow):
             btn.setChecked(i == idx)
         self.atualizar_todas_telas()
 
+    # DASHBOARD
     def setup_aba_dashboard(self):
-        widget = QWidget()
+        widget = QFrame()
+        widget.setObjectName("Container")
         lay = QVBoxLayout(widget)
         lay.setContentsMargins(30, 30, 30, 30)
+        lay.setSpacing(20)
         
         lbl = QLabel()
-        lbl.setText("<h2>Dashboard</h2><p style='color:#64748B; margin:0;'>Visão geral do sistema de agendamentos</p>")
-        lbl.setStyleSheet("font-family: 'Segoe UI'; font-size: 14px;")
+        lbl.setText("<h2>Dashboard</h2><p style='color:#64748B;'>Visão geral do sistema</p>")
         lay.addWidget(lbl)
-        lay.addSpacing(15)
         
         self.grid_dash = QGridLayout()
+        self.grid_dash.setSpacing(20)
+
         self.card_p = CardIndicador("Pacientes", 0, "#2563EB")
         self.card_pr = CardIndicador("Profissionais", 0, "#10B981")
         self.card_u = CardIndicador("UBS", 0, "#8B5CF6")
         self.card_c = CardIndicador("Consultas Agendadas", 0, "#F59E0B")
-        
+
+        for card in [self.card_p, self.card_pr, self.card_u, self.card_c]:
+            card.setObjectName("CardIndicador")
+
         self.grid_dash.addWidget(self.card_p, 0, 0)
         self.grid_dash.addWidget(self.card_pr, 0, 1)
         self.grid_dash.addWidget(self.card_u, 1, 0)
@@ -111,30 +119,29 @@ class MainWindow(QMainWindow):
         lay.addStretch()
         self.paineis.addWidget(widget)
 
+    # CADASTRO GENÉRICO
     def criar_layout_cadastro(self, titulo, subtitulo, callback_novo):
-        widget = QWidget()
+        widget = QFrame()
+        widget.setObjectName("Container")
         lay = QVBoxLayout(widget)
         lay.setContentsMargins(30, 30, 30, 30)
+        lay.setSpacing(20)
         
         topo = QHBoxLayout()
         
-        # Correção do texto com formatação HTML limpa para o PySide
         lbl = QLabel()
-        lbl.setText(f"<h2>{titulo}</h2><p style='color:#64748B; margin:0;'>{subtitulo}</p>")
-        lbl.setStyleSheet("font-family: 'Segoe UI'; font-size: 14px;")
+        lbl.setText(f"<h2>{titulo}</h2><p style='color:#64748B;'>{subtitulo}</p>")
         
-        # Criando o botão com a folha de estilo idêntica ao Figma
         btn_novo = QPushButton(f"+ Novo {titulo}")
         btn_novo.setObjectName("BtnAcaoPrincipal")
-        btn_novo.setStyleSheet(ESTILO_COMPONENTES)  # Link direto com o arquivo estilos.py
         btn_novo.setCursor(Qt.PointingHandCursor)
         btn_novo.clicked.connect(callback_novo)
         
         topo.addWidget(lbl)
         topo.addStretch()
         topo.addWidget(btn_novo)
+
         lay.addLayout(topo)
-        lay.addSpacing(20)
         
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
@@ -142,6 +149,7 @@ class MainWindow(QMainWindow):
         
         conteudo_scroll = QWidget()
         conteudo_scroll.setObjectName("ConteudoScroll")
+
         grid = QGridLayout(conteudo_scroll)
         grid.setAlignment(Qt.AlignTop | Qt.AlignLeft)
         grid.setSpacing(20)
@@ -164,66 +172,61 @@ class MainWindow(QMainWindow):
         self.paineis.addWidget(w)
 
     def setup_aba_agendamentos(self):
-        widget = QWidget()
+        widget = QFrame()
+        widget.setObjectName("Container")
         lay = QVBoxLayout(widget)
         lay.setContentsMargins(30, 30, 30, 30)
+        lay.setSpacing(20)
         
         topo = QHBoxLayout()
+
         lbl = QLabel()
-        lbl.setText("<h2>Agendamentos</h2><p style='color:#64748B; margin:0;'>Gerencie as consultas agendadas</p>")
-        lbl.setStyleSheet("font-family: 'Segoe UI'; font-size: 14px;")
+        lbl.setText("<h2>Agendamentos</h2><p style='color:#64748B;'>Consultas</p>")
         
         btn_novo = QPushButton("+ Nova Consulta")
         btn_novo.setObjectName("BtnAcaoPrincipal")
-        btn_novo.setStyleSheet(ESTILO_COMPONENTES)
         btn_novo.setCursor(Qt.PointingHandCursor)
         btn_novo.clicked.connect(self.abrir_modal_consulta)
         
         topo.addWidget(lbl)
         topo.addStretch()
         topo.addWidget(btn_novo)
+
         lay.addLayout(topo)
-        lay.addSpacing(20)
         
-        # Filtros organizados
         filtros_layout = QHBoxLayout()
         filtros_layout.setSpacing(10)
         
         self.filtro_data = QDateEdit(QDate.currentDate())
         self.filtro_data.setCalendarPopup(True)
-        self.filtro_data.setStyleSheet(ESTILO_COMPONENTES)
         self.filtro_data.dateChanged.connect(self.atualizar_tela_agendamentos)
-        
+
         self.filtro_paciente = QComboBox()
-        self.filtro_paciente.setStyleSheet(ESTILO_COMPONENTES)
         self.filtro_paciente.currentTextChanged.connect(self.atualizar_tela_agendamentos)
         
-        lbl_d = QLabel("Data:")
-        lbl_d.setStyleSheet("color: #475569; font-weight: bold;")
-        lbl_p = QLabel("Paciente:")
-        lbl_p.setStyleSheet("color: #475569; font-weight: bold;")
-        
-        filtros_layout.addWidget(lbl_d)
+        filtros_layout.addWidget(QLabel("Data:"))
         filtros_layout.addWidget(self.filtro_data)
-        filtros_layout.addSpacing(10)
-        filtros_layout.addWidget(lbl_p)
+        filtros_layout.addWidget(QLabel("Paciente:"))
         filtros_layout.addWidget(self.filtro_paciente)
         filtros_layout.addStretch()
+        
         lay.addLayout(filtros_layout)
-        lay.addSpacing(15)
         
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setStyleSheet("background: transparent; border: none;")
+        
         conteudo_scroll = QWidget()
         self.grid_agendamentos = QGridLayout(conteudo_scroll)
         self.grid_agendamentos.setAlignment(Qt.AlignTop | Qt.AlignLeft)
         self.grid_agendamentos.setSpacing(20)
+
         scroll.setWidget(conteudo_scroll)
         lay.addWidget(scroll)
         
         self.paineis.addWidget(widget)
 
+    # RESTO DO SISTEMA (100% mantido)
     def executar_operacao_async(self, acao, *args):
         self.progress_bar.setValue(0)
         self.worker = OperacaoArquivoWorker(self.gerenciador, acao, *args)
