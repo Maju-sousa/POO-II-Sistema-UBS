@@ -19,18 +19,17 @@ class GerenciadorSistema:
 
     def salvar_dados(self):
         yield 25
-        time.sleep(0.1) # Simula gravação em disco assíncrona
+        time.sleep(0.1) 
         with open(self.arquivo, 'w', encoding='utf-8') as f:
             json.dump(self.dados, f, indent=4, ensure_ascii=False)
         yield 100
 
-    # --- Métodos de Cadastro ---
     def adicionar_paciente(self, p): self.dados["pacientes"].append(p.to_dict())
     def adicionar_profissional(self, pr): self.dados["profissionais"].append(pr.to_dict())
     def adicionar_ubs(self, u): self.dados["ubs"].append(u.to_dict())
     
     def agendar_consulta(self, c):
-        # Validação de conflito de horário (Regra de POO 2)
+        
         for consulta in self.dados["consultas"]:
             if (consulta["profissional_nome"] == c.profissional_nome and 
                 consulta["data"] == c.data and 
