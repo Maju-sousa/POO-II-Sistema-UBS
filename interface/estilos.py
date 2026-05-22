@@ -1,12 +1,15 @@
-# interface/estilos.py
-
 ESTILO_GLOBAL = """
 QMainWindow {
-    background-color: #F1F5F9;
+    background-color: qlineargradient(
+        x1:0, y1:0,
+        x2:1, y2:1,
+        stop:0 #F8FAFC,
+        stop:1 #EEF2FF
+    );
 }
 
 QFrame#Container {
-    background-color: #F1F5F9;
+    background: transparent;
 }
 
 QScrollArea {
@@ -17,90 +20,223 @@ QScrollArea {
 QWidget#ConteudoScroll {
     background: transparent;
 }
+
+QDialog {
+    background-color: #FFFFFF;
+    border-radius: 24px;
+}
+
+QProgressBar {
+    background-color: #E2E8F0;
+    border-radius: 5px;
+    height: 10px;
+}
+
+QProgressBar::chunk {
+    background-color:#4338CA;
+    border-radius: 5px;
+}
 """
+
 
 ESTILO_BARRA_LATERAL = """
 QFrame#BarraLateral {
-    background-color: #2D2F36;
-    border-right: none;
+
+    background-color: rgba(255,255,255,0.96);
+
+    border-right: 1px solid #E2E8F0;
 }
 
-/* Título */
+
+/* =========================
+   TÍTULO
+========================= */
+
 QLabel#TituloApp {
-    font-size: 18px;
-    font-weight: bold;
-    color: #FFFFFF;
-    padding: 15px 10px;
-    font-family: 'Segoe UI', Arial, sans-serif;
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+    color: #0F172A;
+
+    padding-top: 10px;
+
+    padding-bottom: 6px;
+
+    font-family: 'Segoe UI';
 }
 
-/* Botões do menu */
+
+/* =========================
+   BOTÕES MENU
+========================= */
+
 QPushButton#AbasMenu {
+
     background-color: transparent;
+
     border: none;
-    color: #C0C0C0;
-    font-size: 14px;
+
+    color: #475569;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
     text-align: left;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-family: 'Segoe UI', Arial, sans-serif;
+
+    padding: 18px 22px;
+
+    border-radius: 18px;
+
+    font-family: 'Segoe UI';
+
+    margin-top: 6px;
 }
+
+
+/* HOVER */
 
 QPushButton#AbasMenu:hover {
-    background-color: #3E4048;
-    color: white;
+
+    background-color: #EEF2FF;
+
+    color: #312E81;
 }
 
+
+/* BOTÃO ATIVO */
+
 QPushButton#AbasMenu:checked {
-    background-color: #6C63FF;
+
+    background-color: #4F46E5;
+
     color: white;
-    font-weight: bold;
+
+    font-weight: 700;
+
+    border-left: 5px solid #C7D2FE;
+}
+
+
+/* CLIQUE */
+
+QPushButton#AbasMenu:pressed {
+
+    background-color: #4338CA;
 }
 """
 
 
 ESTILO_COMPONENTES = """
-/* ===== CARDS ===== */
-QFrame#CardIndicador, QFrame#CardDado {
-    background-color: #FFFFFF;
-    border-radius: 14px;
-    padding: 18px;
+
+/* =========================
+   CARDS
+========================= */
+
+QFrame#CardIndicador,
+QFrame#CardDado {
+
+    background: qlineargradient(
+        x1:0, y1:0,
+        x2:1, y2:1,
+        stop:0 #FFFFFF,
+        stop:1 #F8FAFC
+    );
+
+    border: 1px solid #E2E8F0;
+
+    border-radius: 30px;
+
+    padding: 26px;
 }
 
-/* Hover suave */
+
+/* HOVER DOS CARDS */
+
+QFrame#CardIndicador:hover,
 QFrame#CardDado:hover {
-    background-color: #F8FAFC;
+
+    border: 1px solid #A5B4FC;
+
+    background-color: #FFFFFF;
 }
 
-/* ===== BOTÃO PRINCIPAL ===== */
+
+/* =========================
+   BOTÃO PRINCIPAL
+========================= */
+
 QPushButton#BtnAcaoPrincipal {
-    background-color: #6366F1;
+
+    background-color: #4F46E5;
+
     color: white;
-    font-size: 13px;
-    font-weight: bold;
-    border-radius: 10px;
-    padding: 10px 18px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    border-radius: 16px;
+
+    padding: 14px 26px;
+
+    font-family: 'Segoe UI';
 }
 
 QPushButton#BtnAcaoPrincipal:hover {
-    background-color: #4F46E5;
+
+    background-color: #4338CA;
 }
 
-/* ===== INPUTS ===== */
-QLineEdit, QComboBox, QDateEdit, QTimeEdit {
-    background-color: #FFFFFF;
-    border: 1px solid #E2E8F0;
-    border-radius: 10px;
-    padding: 8px 12px;
+QPushButton#BtnAcaoPrincipal:pressed {
+
+    background-color: #3730A3;
+}
+
+
+/* =========================
+   INPUTS
+========================= */
+
+QLineEdit,
+QComboBox,
+QDateEdit,
+QTimeEdit {
+
+    background-color: rgba(255,255,255,0.98);
+
+    border: 1px solid #CBD5E1;
+
+    border-radius: 14px;
+
+    padding: 12px 16px;
+
     color: #334155;
+
+    font-size: 14px;
+
+    font-family: 'Segoe UI';
 }
 
-QLineEdit:focus, QComboBox:focus, QDateEdit:focus, QTimeEdit:focus {
+QLineEdit:focus,
+QComboBox:focus,
+QDateEdit:focus,
+QTimeEdit:focus {
+
     border: 1px solid #6366F1;
 }
 
-/* ===== TEXTO ===== */
+
+/* =========================
+   LABELS
+========================= */
+
 QLabel {
+
     color: #1E293B;
+
+    font-family: 'Segoe UI';
 }
 """
