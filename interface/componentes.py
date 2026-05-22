@@ -159,6 +159,7 @@ class ModalBase(QDialog):
 
         self.form_layout = QFormLayout()
         self.form_layout.setSpacing(10)
+        self.form_layout.setVerticalSpacing(14)
         layout.addLayout(self.form_layout)
 
         botoes = QHBoxLayout()
@@ -201,7 +202,8 @@ class ModalPaciente(ModalBase):
 
         
         self.txt_cpf.setPlaceholderText("000.000.000-00")
-        self.txt_nasc.setPlaceholderText("DDMMAAAA")
+        self.txt_nasc.setPlaceholderText("DD/MM/AAAA")
+        self.txt_tel.setPlaceholderText("(89) 99999-9999")
 
         self.form_layout.addRow("Nome Completo:", self.txt_nome)
         self.form_layout.addRow("CPF:", self.txt_cpf)
@@ -248,6 +250,9 @@ class ModalConsulta(ModalBase):
         self.date_edit = QDateEdit(QDate.currentDate())
         self.date_edit.setCalendarPopup(True) 
         self.time_edit = QTimeEdit(QTime.currentTime())
+
+        self.time_edit.setDisplayFormat("HH:mm")
+        self.date_edit.setDisplayFormat("dd/MM/yyyy")
 
         self.form_layout.addRow("Paciente:", self.cb_p)
         self.form_layout.addRow("Profissional:", self.cb_pr)
