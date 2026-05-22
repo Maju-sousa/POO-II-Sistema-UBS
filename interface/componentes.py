@@ -1,3 +1,4 @@
+# interface/componentes.py
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel,
     QLineEdit, QPushButton, QFormLayout, QFrame,
@@ -6,53 +7,59 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, QDate, QTime, Signal
 from PySide6.QtGui import QColor
 
-from PySide6.QtWidgets import QHBoxLayout
-
 class CardIndicador(QFrame):
-    def __init__(self, titulo, valor, icone="👤", cor="#6366F1"):
+    def __init__(self, titulo, valor, icone="👤", cor="#29227C"):
         super().__init__()
-
         self.setObjectName("CardIndicador")
 
+        
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(15, 15, 15, 15)
-        layout.setSpacing(8)
+        layout.setContentsMargins(22, 22, 22, 22)
+        layout.setSpacing(12)
 
-        # 🔹 TOPO (titulo + icone)
+      
         topo = QHBoxLayout()
 
         self.lbl_titulo = QLabel(titulo)
-        self.lbl_titulo.setStyleSheet("color: #64748B; font-size: 13px;")
+        self.lbl_titulo.setStyleSheet("color: #64748B; font-size: 14px; font-weight: 500; background: transparent;")
 
         self.lbl_icone = QLabel(icone)
+        
+      
         self.lbl_icone.setStyleSheet(f"""
-            font-size: 18px;
-            background-color: {cor}22;
-            padding: 6px;
-            border-radius: 8px;
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            font-size: 16px;
+            background-color: {cor}15;
+            color: {cor};
+            border-radius: 18px;
+            min-width: 36px;
+            max-width: 36px;
+            min-height: 36px;
+            max-height: 36px;
+            qproperty-alignment: 'AlignCenter';
         """)
 
         topo.addWidget(self.lbl_titulo)
         topo.addStretch()
         topo.addWidget(self.lbl_icone)
 
-        # 🔹 VALOR
         self.lbl_valor = QLabel(str(valor))
-        self.lbl_valor.setStyleSheet("font-size: 28px; font-weight: bold; color:#0F172A;")
+        self.lbl_valor.setStyleSheet("font-size: 28px; font-weight: bold; color: #1E293B; background: transparent;")
 
         layout.addLayout(topo)
         layout.addWidget(self.lbl_valor)
 
+        # Sombra flutuante bem leve
         shadow = QGraphicsDropShadowEffect()
-        shadow.setBlurRadius(25)
-        shadow.setOffset(0, 6)
-        shadow.setColor(QColor(0, 0, 0, 40))
+        shadow.setBlurRadius(100)
+        shadow.setOffset(0, 4)
+        shadow.setColor(QColor(0, 0, 0, 10)) 
         self.setGraphicsEffect(shadow)
 
 class CardGenerico(QFrame):
     def __init__(self, titulo, dados):
         super().__init__()
-
         self.setObjectName("CardDado")
 
         layout = QVBoxLayout(self)
@@ -60,7 +67,7 @@ class CardGenerico(QFrame):
         layout.setSpacing(6)
 
         lbl_titulo = QLabel(titulo)
-        lbl_titulo.setStyleSheet("font-size: 15px; font-weight: bold; color:#0F172A;")
+        lbl_titulo.setStyleSheet("font-size: 15px; font-weight: bold;")
         layout.addWidget(lbl_titulo)
 
         for k, v in dados.items():
@@ -68,23 +75,18 @@ class CardGenerico(QFrame):
             lbl.setStyleSheet("color: #475569; font-size: 12px;")
             layout.addWidget(lbl)
 
-        # SOMBRA
         shadow = QGraphicsDropShadowEffect()
-        shadow.setBlurRadius(20)
+        shadow.setBlurRadius(100)
         shadow.setOffset(0, 5)
-        shadow.setColor(QColor(0, 0, 0, 30))
+        shadow.setColor(QColor(0, 0, 0, 15))
         self.setGraphicsEffect(shadow)
 
 
-# =========================
-# CARD CONSULTA
-# =========================
 class CardConsulta(QFrame):
     cancelar_clicked = Signal()
 
     def __init__(self, nome_p, cpf, medico, ubs, data, hora, status):
         super().__init__()
-
         self.setObjectName("CardDado")
 
         layout = QVBoxLayout(self)
@@ -94,11 +96,12 @@ class CardConsulta(QFrame):
         header = QHBoxLayout()
 
         lbl_nome = QLabel(nome_p)
-        lbl_nome.setStyleSheet("font-size: 15px; font-weight: bold; color:#0F172A;")
+        lbl_nome.setStyleSheet("font-size: 15px; font-weight: bold;")
 
         btn_cancelar = QPushButton("✕")
         btn_cancelar.setFixedSize(20, 20)
-        btn_cancelar.setStyleSheet("color:#EF4444; border:none; background:transparent;")
+        btn_cancelar.setCursor(Qt.PointingHandCursor)
+        btn_cancelar.setStyleSheet("color:#EF4444; border:none; background:transparent; font-weight:bold;")
         btn_cancelar.clicked.connect(self.cancelar_clicked.emit)
 
         if status != "Agendada":
@@ -107,7 +110,6 @@ class CardConsulta(QFrame):
         header.addWidget(lbl_nome)
         header.addStretch()
         header.addWidget(btn_cancelar)
-
         layout.addLayout(header)
 
         layout.addWidget(QLabel(f"<span style='color:#64748B;'>CPF:</span> {cpf}"))
@@ -115,14 +117,14 @@ class CardConsulta(QFrame):
         layout.addWidget(QLabel(f"<b>UBS:</b> {ubs}"))
 
         footer = QHBoxLayout()
-        footer.addWidget(QLabel(f"📅 {data}  🕒 {hora}"))
+        footer.addWidget(QLabel(f"📅 {data}  &nbsp; 🕒 {hora}"))
 
         badge = QLabel(status)
         cor = "#10B981" if status == "Agendada" else "#EF4444"
         badge.setStyleSheet(f"""
             background-color: {cor}22;
             color: {cor};
-            padding: 3px 8px;
+            padding: 4px 10px;
             border-radius: 6px;
             font-size: 11px;
             font-weight: bold;
@@ -130,43 +132,55 @@ class CardConsulta(QFrame):
 
         footer.addStretch()
         footer.addWidget(badge)
-
         layout.addLayout(footer)
 
-        # SOMBRA
         shadow = QGraphicsDropShadowEffect()
         shadow.setBlurRadius(20)
         shadow.setOffset(0, 5)
-        shadow.setColor(QColor(0, 0, 0, 30))
+        shadow.setColor(QColor(0, 0, 0, 15))
         self.setGraphicsEffect(shadow)
-
 
 
 class ModalBase(QDialog):
     def __init__(self, titulo, pai=None):
         super().__init__(pai)
-
         self.setWindowTitle(titulo)
-        self.setMinimumWidth(380)
+        self.setMinimumWidth(400)
+        
+        
+        self.setObjectName("ModalSistema") 
 
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(15)
 
-        lbl = QLabel(titulo)
-        lbl.setStyleSheet("""
-        font-size: 18px;
-        font-weight: bold;
-        color: white;
-        """)
+        lbl = QLabel(f"Cadastrar {titulo}")
+        lbl.setStyleSheet("font-size:18px; font-weight:bold; color: #1E293B;")
         layout.addWidget(lbl)
 
         self.form_layout = QFormLayout()
+        self.form_layout.setSpacing(10)
         layout.addLayout(self.form_layout)
 
         botoes = QHBoxLayout()
+        botoes.setSpacing(10)
 
         btn_cancelar = QPushButton("Cancelar")
+        btn_cancelar.setCursor(Qt.PointingHandCursor)
+        btn_cancelar.setStyleSheet("""
+            QPushButton {
+                background-color: #E2E8F0;
+                color: #475569;
+                border-radius: 10px;
+                padding: 10px 18px;
+                font-weight: bold;
+            }
+            QPushButton:hover { background-color: #CBD5E1; }
+        """)
+        
         btn_ok = QPushButton("Salvar")
         btn_ok.setObjectName("BtnAcaoPrincipal")
+        btn_ok.setCursor(Qt.PointingHandCursor)
 
         btn_cancelar.clicked.connect(self.reject)
         btn_ok.clicked.connect(self.accept)
@@ -181,52 +195,19 @@ class ModalBase(QDialog):
 class ModalPaciente(ModalBase):
     def __init__(self, pai=None):
         super().__init__("Paciente", pai)
-
         self.txt_nome = QLineEdit()
         self.txt_cpf = QLineEdit()
         self.txt_nasc = QLineEdit()
         self.txt_tel = QLineEdit()
 
-        estilo_input = """
-        QLineEdit{
-            background-color: #1E293B;
-            color: white;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            padding: 10px;
-        }
-
-        QLineEdit:focus{
-            border: 2px solid #6366F1;
-        }
-        """
-
-        # aplica o estilo nos inputs
-        self.txt_nome.setStyleSheet(estilo_input)
-        self.txt_cpf.setStyleSheet(estilo_input)
-        self.txt_nasc.setStyleSheet(estilo_input)
-        self.txt_tel.setStyleSheet(estilo_input)
-
-        # labels
-        lbl_nome = QLabel("Nome")
-        lbl_nome.setStyleSheet("color: #E2E8F0; font-weight: bold;")
-
-        lbl_cpf = QLabel("CPF")
-        lbl_cpf.setStyleSheet("color: #E2E8F0; font-weight: bold;")
-
-        lbl_nasc = QLabel("Nascimento")
-        lbl_nasc.setStyleSheet("color: #E2E8F0; font-weight: bold;")
-
-        lbl_tel = QLabel("Telefone")
-        lbl_tel.setStyleSheet("color: #E2E8F0; font-weight: bold;")
-
-        # adiciona no formulário
-        self.form_layout.addRow(lbl_nome, self.txt_nome)
-        self.form_layout.addRow(lbl_cpf, self.txt_cpf)
-        self.form_layout.addRow(lbl_nasc, self.txt_nasc)
-        self.form_layout.addRow(lbl_tel, self.txt_tel)
-
         
+        self.txt_cpf.setPlaceholderText("000.000.000-00")
+        self.txt_nasc.setPlaceholderText("DDMMAAAA")
+
+        self.form_layout.addRow("Nome Completo:", self.txt_nome)
+        self.form_layout.addRow("CPF:", self.txt_cpf)
+        self.form_layout.addRow("Nascimento:", self.txt_nasc)
+        self.form_layout.addRow("Telefone:", self.txt_tel)
 
 
 class ModalProfissional(ModalBase):
@@ -235,8 +216,8 @@ class ModalProfissional(ModalBase):
         self.txt_nome = QLineEdit()
         self.txt_espe = QLineEdit()
 
-        self.form_layout.addRow("Nome", self.txt_nome)
-        self.form_layout.addRow("Especialidade", self.txt_espe)
+        self.form_layout.addRow("Nome do Profissional:", self.txt_nome)
+        self.form_layout.addRow("Especialidade:", self.txt_espe)
 
 
 class ModalUBS(ModalBase):
@@ -245,8 +226,8 @@ class ModalUBS(ModalBase):
         self.txt_nome = QLineEdit()
         self.txt_end = QLineEdit()
 
-        self.form_layout.addRow("Nome", self.txt_nome)
-        self.form_layout.addRow("Endereço", self.txt_end)
+        self.form_layout.addRow("Nome da Unidade:", self.txt_nome)
+        self.form_layout.addRow("Endereço:", self.txt_end)
 
 
 class ModalConsulta(ModalBase):
@@ -266,10 +247,11 @@ class ModalConsulta(ModalBase):
             self.cb_u.addItem(u["nome"], u["nome"])
 
         self.date_edit = QDateEdit(QDate.currentDate())
+        self.date_edit.setCalendarPopup(True) 
         self.time_edit = QTimeEdit(QTime.currentTime())
 
-        self.form_layout.addRow("Paciente", self.cb_p)
-        self.form_layout.addRow("Profissional", self.cb_pr)
-        self.form_layout.addRow("UBS", self.cb_u)
-        self.form_layout.addRow("Data", self.date_edit)
-        self.form_layout.addRow("Hora", self.time_edit)
+        self.form_layout.addRow("Paciente:", self.cb_p)
+        self.form_layout.addRow("Profissional:", self.cb_pr)
+        self.form_layout.addRow("UBS de Atendimento:", self.cb_u)
+        self.form_layout.addRow("Data da Consulta:", self.date_edit)
+        self.form_layout.addRow("Horário:", self.time_edit)
