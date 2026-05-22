@@ -1,4 +1,3 @@
-# interface/componentes.py
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel,
     QLineEdit, QPushButton, QFormLayout, QFrame,
