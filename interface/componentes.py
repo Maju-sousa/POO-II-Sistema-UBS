@@ -6,6 +6,13 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt, QDate, QTime, Signal
 from PySide6.QtGui import QColor
 
+class CampoMascarado(QLineEdit):
+    def mousePressEvent(self, event):
+        super().mousePressEvent(event)
+        # Verifica se há algum dígito preenchido; se não, move para o início
+        if not any(c.isdigit() for c in self.text()):
+            self.setCursorPosition(0)
+
 class CardIndicador(QFrame):
     def __init__(self, titulo, valor, icone="👤", cor="#29227C"):
         super().__init__()
@@ -200,10 +207,12 @@ class ModalPaciente(ModalBase):
         self.txt_nasc = QLineEdit()
         self.txt_tel = QLineEdit()
 
-        
-        self.txt_cpf.setPlaceholderText("000.000.000-00")
-        self.txt_nasc.setPlaceholderText("DD/MM/AAAA")
-        self.txt_tel.setPlaceholderText("(89) 99999-9999")
+        self.txt_cpf = CampoMascarado()
+        self.txt_nasc = CampoMascarado()
+        self.txt_tel = CampoMascarado()
+        self.txt_cpf.setInputMask("000.000.000-00")
+        self.txt_nasc.setInputMask("00/00/0000")
+        self.txt_tel.setInputMask("(00) 00000-0000")
 
         self.form_layout.addRow("Nome Completo:", self.txt_nome)
         self.form_layout.addRow("CPF:", self.txt_cpf)

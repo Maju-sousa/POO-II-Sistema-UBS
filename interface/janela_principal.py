@@ -466,6 +466,9 @@ class MainWindow(QMainWindow):
         scroll.setWidgetResizable(True)
 
         conteudo_scroll = QWidget()
+        
+        scroll.setStyleSheet("background: transparent; border: none;")
+        conteudo_scroll.setStyleSheet("background: transparent;")
 
         self.grid_agendamentos = QGridLayout(conteudo_scroll)
 
