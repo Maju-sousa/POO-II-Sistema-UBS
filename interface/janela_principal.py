@@ -54,9 +54,9 @@ class MainWindow(QMainWindow):
         layout_principal.setContentsMargins(0, 0, 0, 0)
         layout_principal.setSpacing(0)
 
-        # =========================
+       
         # SIDEBAR
-        # =========================
+        
 
         self.barra_lateral = QFrame()
         self.barra_lateral.setObjectName("BarraLateral")
@@ -84,7 +84,7 @@ class MainWindow(QMainWindow):
 
         avatar.setStyleSheet("""
           padding: 8px;
-          background-color: rgba(79,70,229,0.08);
+          background-color: rgba(79,70,229,0.03);
           border-radius: 50px;
           """)
 
@@ -147,9 +147,7 @@ class MainWindow(QMainWindow):
 
         layout_menu.addStretch()
 
-        # =========================
-        # BARRA DE PROGRESSO
-        # =========================
+        
 
         self.progress_bar = QProgressBar()
         self.progress_bar.setFixedHeight(8)
@@ -175,9 +173,7 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(container)
 
-    # =====================================================
-    # ALTERAÇÃO DE ABAS
-    # =====================================================
+    
 
     def mudar_aba(self, idx):
 
@@ -188,9 +184,6 @@ class MainWindow(QMainWindow):
 
         self.atualizar_todas_telas()
 
-    # =====================================================
-    # DASHBOARD
-    # =====================================================
 
     def setup_aba_dashboard(self):
 
@@ -211,7 +204,7 @@ class MainWindow(QMainWindow):
                     font-weight: 800;
                     color: #111827;
                 '>
-                    Dashboard
+                    Painel Principal
                 </span>
 
                 <p style='
@@ -219,7 +212,7 @@ class MainWindow(QMainWindow):
                     margin-top:6px;
                     font-size:14px;
                 '>
-                    Visão geral do sistema de agendamentos
+                    Sistema de agendamentos
                 </p>
             </div>
         """)
@@ -231,30 +224,30 @@ class MainWindow(QMainWindow):
 
         self.card_p = CardIndicador(
             "Pacientes",
-            0,
-            "\uf0c0",
-            "#2563EB"
+             0,
+            "fa5s.users",
+            "#000000"
         )
 
         self.card_pr = CardIndicador(
             "Profissionais",
             0,
-            "\uf0f1",
-            "#10B981"
+            "fa5s.stethoscope",
+            "#000000"
         )
 
         self.card_u = CardIndicador(
             "UBS",
             0,
-            "\uf1ad",
-            "#8B5CF6"
+           "fa5s.hospital",
+            "#000000"
         )
 
         self.card_c = CardIndicador(
             "Consultas",
             0,
-            "\uf073",
-            "#F59E0B"
+          "fa5s.calendar-check",
+            "#000000"
         )
 
         self.grid_dash.addWidget(self.card_p, 0, 0)
@@ -264,14 +257,12 @@ class MainWindow(QMainWindow):
 
         lay.addLayout(self.grid_dash)
 
-        # espaço inferior elegante
+       
         lay.addStretch()
 
         self.paineis.addWidget(widget)
 
-    # =====================================================
-    # CRIAÇÃO DE TELAS
-    # =====================================================
+    
 
     def criar_layout_cadastro(
         self,
@@ -342,9 +333,7 @@ class MainWindow(QMainWindow):
 
         return widget, grid
 
-    # =====================================================
-    # PACIENTES
-    # =====================================================
+    
 
     def setup_aba_pacientes(self):
 
@@ -356,9 +345,7 @@ class MainWindow(QMainWindow):
 
         self.paineis.addWidget(w)
 
-    # =====================================================
-    # PROFISSIONAIS
-    # =====================================================
+    
 
     def setup_aba_profissionais(self):
 
@@ -370,9 +357,7 @@ class MainWindow(QMainWindow):
 
         self.paineis.addWidget(w)
 
-    # =====================================================
-    # UBS
-    # =====================================================
+    
 
     def setup_aba_ubs(self):
 
@@ -384,9 +369,7 @@ class MainWindow(QMainWindow):
 
         self.paineis.addWidget(w)
 
-    # =====================================================
-    # AGENDAMENTOS
-    # =====================================================
+    
 
     def setup_aba_agendamentos(self):
 
@@ -435,7 +418,7 @@ class MainWindow(QMainWindow):
 
         lay.addLayout(topo)
 
-        # filtros
+        
         filtros_layout = QHBoxLayout()
         filtros_layout.setSpacing(14)
 
@@ -484,9 +467,7 @@ class MainWindow(QMainWindow):
 
         self.paineis.addWidget(widget)
 
-    # =====================================================
-    # THREADS
-    # =====================================================
+   
 
     def executar_operacao_async(self, acao, *args):
 
@@ -523,9 +504,7 @@ class MainWindow(QMainWindow):
             )
 
         self.atualizar_todas_telas()
-            # =====================================================
-    # MODAIS
-    # =====================================================
+           
 
     def abrir_modal_paciente(self):
 
@@ -601,9 +580,7 @@ class MainWindow(QMainWindow):
                 c
             )
 
-    # =====================================================
-    # LIMPEZA DE GRID
-    # =====================================================
+    
 
     def limpar_grid(self, grid):
 
@@ -614,9 +591,7 @@ class MainWindow(QMainWindow):
             if item.widget():
                 item.widget().deleteLater()
 
-    # =====================================================
-    # ATUALIZAÇÃO DAS TELAS
-    # =====================================================
+    
 
     def atualizar_todas_telas(self):
 
@@ -627,9 +602,7 @@ class MainWindow(QMainWindow):
         self.card_u.lbl_valor.setText(str(cont["ubs"]))
         self.card_c.lbl_valor.setText(str(cont["consultas"]))
 
-        # =========================
-        # PACIENTES
-        # =========================
+        
 
         self.limpar_grid(self.grid_pacientes)
 
@@ -669,9 +642,7 @@ class MainWindow(QMainWindow):
                 i % 2
             )
 
-        # =========================
-        # UBS
-        # =========================
+        
 
         self.limpar_grid(self.grid_ubs)
 
@@ -690,9 +661,7 @@ class MainWindow(QMainWindow):
                 i % 2
             )
 
-        # =========================
-        # FILTRO PACIENTE
-        # =========================
+        
 
         self.filtro_paciente.blockSignals(True)
 
@@ -714,9 +683,6 @@ class MainWindow(QMainWindow):
 
         self.atualizar_tela_agendamentos()
 
-    # =====================================================
-    # ATUALIZA CONSULTAS
-    # =====================================================
 
     def atualizar_tela_agendamentos(self):
 
