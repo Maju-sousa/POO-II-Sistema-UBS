@@ -17,7 +17,7 @@ QFrame#Container {
 QScrollArea {
     background: transparent;
     border: none;
-    box-shadow: 0px 10px 30px rgba(99,102,241,0.08);
+
 }
 
 QWidget#ConteudoScroll {
