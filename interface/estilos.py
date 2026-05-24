@@ -3,8 +3,10 @@ QMainWindow {
     background-color: qlineargradient(
         x1:0, y1:0,
         x2:1, y2:1,
-        stop:0 #F8FAFC,
-        stop:1 #EEF2FF
+
+        stop:0 #FFFFFF,
+        stop:0.5 #F8FAFC,
+        stop:1 #E0E7FF
     );
 }
 
@@ -15,6 +17,7 @@ QFrame#Container {
 QScrollArea {
     background: transparent;
     border: none;
+    box-shadow: 0px 10px 30px rgba(99,102,241,0.08);
 }
 
 QWidget#ConteudoScroll {
@@ -22,7 +25,7 @@ QWidget#ConteudoScroll {
 }
 
 QDialog {
-    background-color: #FFFFFF;
+    background-color: rgba(255,255,255,0.98);
     border-radius: 24px;
 }
 
