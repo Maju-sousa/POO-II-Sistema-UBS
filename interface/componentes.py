@@ -1,3 +1,4 @@
+import qtawesome as qta
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel,
     QLineEdit, QPushButton, QFormLayout, QFrame,
@@ -9,7 +10,7 @@ from PySide6.QtGui import QColor
 class CampoMascarado(QLineEdit):
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
-        # Verifica se há algum dígito preenchido; se não, move para o início
+        # aqui Verifica se há algum dígito preenchido; se não, move para o início
         if not any(c.isdigit() for c in self.text()):
             self.setCursorPosition(0)
 
@@ -27,24 +28,28 @@ class CardIndicador(QFrame):
         topo = QHBoxLayout()
 
         self.lbl_titulo = QLabel(titulo)
-        self.lbl_titulo.setStyleSheet("color: #64748B; font-size: 14px; font-weight: 500; background: transparent;")
+        self.lbl_titulo.setStyleSheet("color: #64748B; font-size: 20px; font-weight: 500; background: transparent;")
 
         self.lbl_icone = QLabel(icone)
         
       
+        self.lbl_icone = QLabel()
+        
+                        
+
+        icone_qt = qta.icon(icone,color=cor)
+
+        self.lbl_icone.setPixmap(icone_qt.pixmap(40, 40))
+
+        self.lbl_icone.setAlignment(Qt.AlignCenter)
+
+        self.lbl_icone.setFixedSize(42, 42)
+
         self.lbl_icone.setStyleSheet(f"""
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            font-size: 16px;
-            background-color: {cor}15;
-            color: {cor};
-            border-radius: 18px;
-            min-width: 36px;
-            max-width: 36px;
-            min-height: 36px;
-            max-height: 36px;
-            qproperty-alignment: 'AlignCenter';
+         background-color: {cor}20;
+         border-radius: 22px;
         """)
+        
 
         topo.addWidget(self.lbl_titulo)
         topo.addStretch()
@@ -56,11 +61,11 @@ class CardIndicador(QFrame):
         layout.addLayout(topo)
         layout.addWidget(self.lbl_valor)
 
-        # Sombra flutuante bem leve
+        
         shadow = QGraphicsDropShadowEffect()
-        shadow.setBlurRadius(100)
-        shadow.setOffset(0, 4)
-        shadow.setColor(QColor(0, 0, 0, 10)) 
+        shadow.setBlurRadius(60)
+        shadow.setOffset(0, 15)
+        shadow.setColor(QColor(99, 102, 241, 18)) 
         self.setGraphicsEffect(shadow)
 
 class CardGenerico(QFrame):
@@ -202,18 +207,27 @@ class ModalBase(QDialog):
 class ModalPaciente(ModalBase):
     def __init__(self, pai=None):
         super().__init__("Paciente", pai)
+
         self.txt_nome = QLineEdit()
         self.txt_cpf = QLineEdit()
         self.txt_nasc = QLineEdit()
         self.txt_tel = QLineEdit()
 
-        self.txt_cpf = CampoMascarado()
-        self.txt_nasc = CampoMascarado()
-        self.txt_tel = CampoMascarado()
+        
+        self.txt_nome.setPlaceholderText("Nome completo")
+        self.txt_cpf.setPlaceholderText("000.000.000-00;_")
+        self.txt_nasc.setPlaceholderText("DD/MM/AAAA;_")
+        self.txt_tel.setPlaceholderText("(00) 00000-0000;_")
+
+        
         self.txt_cpf.setInputMask("000.000.000-00")
         self.txt_nasc.setInputMask("00/00/0000")
         self.txt_tel.setInputMask("(00) 00000-0000")
 
+        
+        self.txt_nome.setMaxLength(100)
+
+        
         self.form_layout.addRow("Nome Completo:", self.txt_nome)
         self.form_layout.addRow("CPF:", self.txt_cpf)
         self.form_layout.addRow("Nascimento:", self.txt_nasc)
@@ -223,11 +237,25 @@ class ModalPaciente(ModalBase):
 class ModalProfissional(ModalBase):
     def __init__(self, pai=None):
         super().__init__("Profissional", pai)
+
         self.txt_nome = QLineEdit()
         self.txt_espe = QLineEdit()
+        self.txt_crm = QLineEdit()
 
+        
+        self.txt_nome.setPlaceholderText("Nome")
+        self.txt_espe.setPlaceholderText("Especialidade")
+        self.txt_crm.setPlaceholderText("Ex: 123456-PI")
+
+        
+        self.txt_nome.setMaxLength(100)
+        self.txt_espe.setMaxLength(50)
+        self.txt_crm.setMaxLength(15)
+
+       
         self.form_layout.addRow("Nome do Profissional:", self.txt_nome)
         self.form_layout.addRow("Especialidade:", self.txt_espe)
+        self.form_layout.addRow("CRM:", self.txt_crm)
 
 
 class ModalUBS(ModalBase):
