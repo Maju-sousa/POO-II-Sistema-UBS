@@ -1,7 +1,7 @@
 import qtawesome as qta
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel,
-    QLineEdit, QPushButton, QFormLayout, QFrame,
+    QLineEdit, QPushButton, QGridLayout, QFrame,
     QComboBox, QDateEdit, QTimeEdit, QGraphicsDropShadowEffect
 )
 from PySide6.QtCore import Qt, QDate, QTime, Signal
@@ -169,9 +169,12 @@ class ModalBase(QDialog):
         lbl.setStyleSheet("font-size:18px; font-weight:bold; color: #1E293B;")
         layout.addWidget(lbl)
 
-        self.form_layout = QFormLayout()
-        self.form_layout.setSpacing(10)
+        self.form_layout = QGridLayout()
+        self.form_layout.setColumnStretch(0, 0)  # Coluna 0 (labels) não expande
+        self.form_layout.setColumnStretch(1, 1)  # Coluna 1 (campos) expande
+        self.form_layout.setHorizontalSpacing(14)
         self.form_layout.setVerticalSpacing(14)
+        self.form_row = 0  # Contador de linhas
         layout.addLayout(self.form_layout)
 
         botoes = QHBoxLayout()
@@ -203,41 +206,36 @@ class ModalBase(QDialog):
 
         layout.addLayout(botoes)
 
+    def addFormRow(self, label_text, widget):
+        """Adiciona uma linha ao grid com label e widget"""
+        lbl = QLabel(label_text)
+        lbl.setStyleSheet("color: #1E293B; font-weight: 500;")
+        self.form_layout.addWidget(lbl, self.form_row, 0)
+        self.form_layout.addWidget(widget, self.form_row, 1)
+        self.form_row += 1
+
 
 class ModalPaciente(ModalBase):
     def __init__(self, pai=None):
         super().__init__("Paciente", pai)
 
         self.txt_nome = QLineEdit()
-        self.txt_cpf = QLineEdit()
-        self.txt_nasc = QLineEdit()
-        self.txt_tel = QLineEdit()
-
-
-        self.txt_nome.setPlaceholderText("Nome completo")
-
-        self.txt_cpf.setPlaceholderText("000.000.000-00;_")
-        self.txt_nasc.setPlaceholderText("DD/MM/AAAA;_")
-        self.txt_tel.setPlaceholderText("(00) 00000-0000;_")
-
         self.txt_cpf = CampoMascarado()
         self.txt_nasc = CampoMascarado()
         self.txt_tel = CampoMascarado()
+
+        self.txt_nome.setPlaceholderText("Nome completo")
 
         self.txt_cpf.setInputMask("000.000.000-00")
         self.txt_nasc.setInputMask("00/00/0000")
         self.txt_tel.setInputMask("(00) 00000-0000")
 
-        lbl_hint = QLabel("000.000.000-00")
-
-        
         self.txt_nome.setMaxLength(100)
 
-        
-        self.form_layout.addRow("Nome Completo:", self.txt_nome)
-        self.form_layout.addRow("CPF:", self.txt_cpf)
-        self.form_layout.addRow("Nascimento:", self.txt_nasc)
-        self.form_layout.addRow("Telefone:", self.txt_tel)
+        self.addFormRow("Nome Completo:", self.txt_nome)
+        self.addFormRow("CPF:", self.txt_cpf)
+        self.addFormRow("Nascimento:", self.txt_nasc)
+        self.addFormRow("Telefone:", self.txt_tel)
 
 
 class ModalProfissional(ModalBase):
@@ -258,10 +256,9 @@ class ModalProfissional(ModalBase):
         self.txt_espe.setMaxLength(50)
         self.txt_crm.setMaxLength(15)
 
-       
-        self.form_layout.addRow("Nome do Profissional:", self.txt_nome)
-        self.form_layout.addRow("Especialidade:", self.txt_espe)
-        self.form_layout.addRow("CRM:", self.txt_crm)
+        self.addFormRow("Nome do Profissional:", self.txt_nome)
+        self.addFormRow("Especialidade:", self.txt_espe)
+        self.addFormRow("CRM:", self.txt_crm)
 
 
 class ModalUBS(ModalBase):
@@ -270,8 +267,8 @@ class ModalUBS(ModalBase):
         self.txt_nome = QLineEdit()
         self.txt_end = QLineEdit()
 
-        self.form_layout.addRow("Nome da Unidade:", self.txt_nome)
-        self.form_layout.addRow("Endereço:", self.txt_end)
+        self.addFormRow("Nome da Unidade:", self.txt_nome)
+        self.addFormRow("Endereço:", self.txt_end)
 
 
 class ModalConsulta(ModalBase):
@@ -297,8 +294,8 @@ class ModalConsulta(ModalBase):
         self.time_edit.setDisplayFormat("HH:mm")
         self.date_edit.setDisplayFormat("dd/MM/yyyy")
 
-        self.form_layout.addRow("Paciente:", self.cb_p)
-        self.form_layout.addRow("Profissional:", self.cb_pr)
-        self.form_layout.addRow("UBS de Atendimento:", self.cb_u)
-        self.form_layout.addRow("Data da Consulta:", self.date_edit)
-        self.form_layout.addRow("Horário:", self.time_edit)
+        self.addFormRow("Paciente:", self.cb_p)
+        self.addFormRow("Profissional:", self.cb_pr)
+        self.addFormRow("UBS de Atendimento:", self.cb_u)
+        self.addFormRow("Data da Consulta:", self.date_edit)
+        self.addFormRow("Horário:", self.time_edit)
