@@ -223,32 +223,29 @@ class MainWindow(QMainWindow):
         self.grid_dash.setSpacing(28)
 
         self.card_p = CardIndicador(
-            "Pacientes",
+             "Pacientes",
              0,
-            "fa5s.users",
-            "#000000"
-        )
-
+             "fa5s.users",
+            "#003B8E"
+) 
         self.card_pr = CardIndicador(
-            "Profissionais",
-            0,
-            "fa5s.stethoscope",
-            "#000000"
-        )
-
+             "Profissionais",
+             0,
+             "fa5s.stethoscope",
+            "#003B8E"
+)
         self.card_u = CardIndicador(
-            "UBS",
-            0,
-           "fa5s.hospital",
-            "#000000"
-        )
-
+             "UBS",
+             0,
+             "fa5s.hospital",
+             "#003B8E"
+)
         self.card_c = CardIndicador(
             "Consultas",
             0,
-          "fa5s.calendar-check",
-            "#000000"
-        )
+            "fa5s.calendar-check",
+            "#003B8E"
+)
 
         self.grid_dash.addWidget(self.card_p, 0, 0)
         self.grid_dash.addWidget(self.card_pr, 0, 1)
