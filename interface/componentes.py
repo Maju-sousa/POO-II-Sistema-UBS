@@ -213,16 +213,22 @@ class ModalPaciente(ModalBase):
         self.txt_nasc = QLineEdit()
         self.txt_tel = QLineEdit()
 
-        
+
         self.txt_nome.setPlaceholderText("Nome completo")
+
         self.txt_cpf.setPlaceholderText("000.000.000-00;_")
         self.txt_nasc.setPlaceholderText("DD/MM/AAAA;_")
         self.txt_tel.setPlaceholderText("(00) 00000-0000;_")
 
-        
+        self.txt_cpf = CampoMascarado()
+        self.txt_nasc = CampoMascarado()
+        self.txt_tel = CampoMascarado()
+
         self.txt_cpf.setInputMask("000.000.000-00")
         self.txt_nasc.setInputMask("00/00/0000")
         self.txt_tel.setInputMask("(00) 00000-0000")
+
+        lbl_hint = QLabel("000.000.000-00")
 
         
         self.txt_nome.setMaxLength(100)
