@@ -55,8 +55,8 @@ class MainWindow(QMainWindow):
         layout_principal.setSpacing(0)
 
        
-        # SIDEBAR
-        
+
+
 
         self.barra_lateral = QFrame()
         self.barra_lateral.setObjectName("BarraLateral")

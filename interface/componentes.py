@@ -10,7 +10,7 @@ from PySide6.QtGui import QColor
 class CampoMascarado(QLineEdit):
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
-        # aqui Verifica se há algum dígito preenchido; se não, move para o início
+
         if not any(c.isdigit() for c in self.text()):
             self.setCursorPosition(0)
 
@@ -170,11 +170,11 @@ class ModalBase(QDialog):
         layout.addWidget(lbl)
 
         self.form_layout = QGridLayout()
-        self.form_layout.setColumnStretch(0, 0)  # Coluna 0 (labels) não expande
-        self.form_layout.setColumnStretch(1, 1)  # Coluna 1 (campos) expande
+        self.form_layout.setColumnStretch(0, 0)
+        self.form_layout.setColumnStretch(1, 1)
         self.form_layout.setHorizontalSpacing(14)
         self.form_layout.setVerticalSpacing(14)
-        self.form_row = 0  # Contador de linhas
+        self.form_row = 0
         layout.addLayout(self.form_layout)
 
         botoes = QHBoxLayout()
@@ -207,7 +207,7 @@ class ModalBase(QDialog):
         layout.addLayout(botoes)
 
     def addFormRow(self, label_text, widget):
-        """Adiciona uma linha ao grid com label e widget"""
+
         lbl = QLabel(label_text)
         lbl.setStyleSheet("color: #1E293B; font-weight: 500;")
         self.form_layout.addWidget(lbl, self.form_row, 0)
