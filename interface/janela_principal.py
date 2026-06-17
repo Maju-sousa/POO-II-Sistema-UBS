@@ -510,10 +510,10 @@ class MainWindow(QMainWindow):
         if m.exec() == ModalPaciente.Accepted:
 
             p = Paciente(
-                m.txt_nome.text(),
-                m.txt_cpf.text(),
-                m.txt_nasc.text(),
-                m.txt_tel.text()
+                nome=m.txt_nome.text(),
+                cpf=m.txt_cpf.text(),
+                nascimento=m.txt_nasc.text(),
+                telefone=m.txt_tel.text()
             )
 
             self.executar_operacao_async(
@@ -528,8 +528,8 @@ class MainWindow(QMainWindow):
         if m.exec() == ModalProfissional.Accepted:
 
             pr = Profissional(
-                m.txt_nome.text(),
-                m.txt_espe.text()
+                nome=m.txt_nome.text(),
+                especialidade=m.txt_espe.text()
             )
 
             self.executar_operacao_async(
@@ -544,8 +544,8 @@ class MainWindow(QMainWindow):
         if m.exec() == ModalUBS.Accepted:
 
             u = UBS(
-                m.txt_nome.text(),
-                m.txt_end.text()
+                nome=m.txt_nome.text(),
+                endereco=m.txt_end.text()
             )
 
             self.executar_operacao_async(
@@ -565,11 +565,11 @@ class MainWindow(QMainWindow):
         if m.exec() == ModalConsulta.Accepted:
 
             c = Consulta(
-                m.cb_p.currentData(),
-                m.cb_pr.currentText(),
-                m.cb_u.currentText(),
-                m.date_edit.date().toString("dd/MM/yyyy"),
-                m.time_edit.time().toString("hh:mm")
+                paciente_cpf=m.cb_p.currentData(),
+                profissional_nome=m.cb_pr.currentText(),
+                ubs_nome=m.cb_u.currentText(),
+                data=m.date_edit.date().toString("dd/MM/yyyy"),
+                horario=m.time_edit.time().toString("hh:mm")
             )
 
             self.executar_operacao_async(
