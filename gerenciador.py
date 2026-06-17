@@ -8,8 +8,6 @@ class GerenciadorSistema:
 
     def __init__(self):
 
-        self.session = Session()
-
         self.dados = {
             "pacientes": [],
             "profissionais": [],
@@ -21,120 +19,129 @@ class GerenciadorSistema:
 
     def carregar_dados(self):
 
-        self.dados["pacientes"] = [
-            {
-                "cpf": p.cpf,
-                "nome": p.nome,
-                "nascimento": p.nascimento,
-                "telefone": p.telefone
-            }
-            for p in self.session.query(Paciente).all()
-        ]
+        with Session() as session:
 
-        self.dados["profissionais"] = [
-            {
-                "nome": p.nome,
-                "especialidade": p.especialidade
-            }
-            for p in self.session.query(Profissional).all()
-        ]
+            self.dados["pacientes"] = [
+                {
+                    "cpf": p.cpf,
+                    "nome": p.nome,
+                    "nascimento": p.nascimento,
+                    "telefone": p.telefone
+                }
+                for p in session.query(Paciente).all()
+            ]
 
-        self.dados["ubs"] = [
-            {
-                "nome": u.nome,
-                "endereco": u.endereco
-            }
-            for u in self.session.query(UBS).all()
-        ]
+            self.dados["profissionais"] = [
+                {
+                    "nome": p.nome,
+                    "especialidade": p.especialidade
+                }
+                for p in session.query(Profissional).all()
+            ]
 
-        self.dados["consultas"] = [
-            {
-                "paciente_cpf": c.paciente_cpf,
-                "profissional_nome": c.profissional_nome,
-                "ubs_nome": c.ubs_nome,
-                "data": c.data,
-                "horario": c.horario,
-                "status": c.status
-            }
-            for c in self.session.query(Consulta).all()
-        ]
+            self.dados["ubs"] = [
+                {
+                    "nome": u.nome,
+                    "endereco": u.endereco
+                }
+                for u in session.query(UBS).all()
+            ]
+
+            self.dados["consultas"] = [
+                {
+                    "paciente_cpf": c.paciente_cpf,
+                    "profissional_nome": c.profissional_nome,
+                    "ubs_nome": c.ubs_nome,
+                    "data": c.data,
+                    "horario": c.horario,
+                    "status": c.status
+                }
+                for c in session.query(Consulta).all()
+            ]
 
     def salvar_dados(self):
-
+        # Mantido apenas para preservar a barra de progresso na thread.
+        # O commit real de cada operação já acontece dentro do método
+        # correspondente (adicionar_paciente, agendar_consulta, etc).
         yield 25
         time.sleep(0.1)
-
-        self.session.commit()
-
         yield 100
 
     def adicionar_paciente(self, p):
 
-        paciente = Paciente(
-            cpf=p.cpf,
-            nome=p.nome,
-            nascimento=p.nascimento,
-            telefone=p.telefone
-        )
+        with Session() as session:
 
-        self.session.add(paciente)
-        self.session.commit()
+            paciente = Paciente(
+                cpf=p.cpf,
+                nome=p.nome,
+                nascimento=p.nascimento,
+                telefone=p.telefone
+            )
+
+            session.add(paciente)
+            session.commit()
 
         self.carregar_dados()
 
     def adicionar_profissional(self, pr):
 
-        profissional = Profissional(
-            nome=pr.nome,
-            especialidade=pr.especialidade
-        )
+        with Session() as session:
 
-        self.session.add(profissional)
-        self.session.commit()
+            profissional = Profissional(
+                nome=pr.nome,
+                especialidade=pr.especialidade
+            )
+
+            session.add(profissional)
+            session.commit()
 
         self.carregar_dados()
 
     def adicionar_ubs(self, u):
 
-        unidade = UBS(
-            nome=u.nome,
-            endereco=u.endereco
-        )
+        with Session() as session:
 
-        self.session.add(unidade)
-        self.session.commit()
+            unidade = UBS(
+                nome=u.nome,
+                endereco=u.endereco
+            )
+
+            session.add(unidade)
+            session.commit()
 
         self.carregar_dados()
 
     def agendar_consulta(self, c):
 
-        consulta_existente = (
-            self.session.query(Consulta)
-            .filter(
-                Consulta.profissional_nome == c.profissional_nome,
-                Consulta.data == c.data,
-                Consulta.horario == c.horario,
-                Consulta.status == "Agendada"
-            )
-            .first()
-        )
+        with Session() as session:
 
-        if consulta_existente:
-            raise ValueError(
-                f"O médico {c.profissional_nome} já possui consulta neste horário!"
+            consulta_existente = (
+                session.query(Consulta)
+                .filter(
+                    Consulta.profissional_nome == c.profissional_nome,
+                    Consulta.data == c.data,
+                    Consulta.horario == c.horario,
+                    Consulta.status == "Agendada"
+                )
+                .first()
             )
 
-        consulta = Consulta(
-            paciente_cpf=c.paciente_cpf,
-            profissional_nome=c.profissional_nome,
-            ubs_nome=c.ubs_nome,
-            data=c.data,
-            horario=c.horario,
-            status=c.status
-        )
+            if consulta_existente:
+                raise ValueError(
+                    f"O médico {c.profissional_nome} já possui consulta neste horário!"
+                )
 
-        self.session.add(consulta)
-        self.session.commit()
+            consulta = Consulta(
+                paciente_cpf=c.paciente_cpf,
+                profissional_nome=c.profissional_nome,
+                ubs_nome=c.ubs_nome,
+                data=c.data,
+                horario=c.horario,
+                status=c.status
+            )
+
+            session.add(consulta)
+            session.commit()
 
         self.carregar_dados()
 
@@ -146,37 +153,39 @@ class GerenciadorSistema:
         novo_status
     ):
 
-        consulta = (
-            self.session.query(Consulta)
-            .filter(
-                Consulta.paciente_cpf == paciente_cpf,
-                Consulta.data == data,
-                Consulta.horario == horario
+        with Session() as session:
+
+            consulta = (
+                session.query(Consulta)
+                .filter(
+                    Consulta.paciente_cpf == paciente_cpf,
+                    Consulta.data == data,
+                    Consulta.horario == horario
+                )
+                .first()
             )
-            .first()
-        )
 
-        if consulta:
+            if consulta:
+                consulta.status = novo_status
+                session.commit()
 
-            consulta.status = novo_status
-
-            self.session.commit()
-
-            self.carregar_dados()
+        self.carregar_dados()
 
     def obter_contadores(self):
 
-        consultas_ativas = (
-            self.session.query(Consulta)
-            .filter(
-                Consulta.status == "Agendada"
-            )
-            .count()
-        )
+        with Session() as session:
 
-        return {
-            "pacientes": self.session.query(Paciente).count(),
-            "profissionais": self.session.query(Profissional).count(),
-            "ubs": self.session.query(UBS).count(),
-            "consultas": consultas_ativas
-        }
+            consultas_ativas = (
+                session.query(Consulta)
+                .filter(
+                    Consulta.status == "Agendada"
+                )
+                .count()
+            )
+
+            return {
+                "pacientes": session.query(Paciente).count(),
+                "profissionais": session.query(Profissional).count(),
+                "ubs": session.query(UBS).count(),
+                "consultas": consultas_ativas
+            }
