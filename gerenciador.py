@@ -33,6 +33,7 @@ class GerenciadorSistema:
 
             self.dados["profissionais"] = [
                 {
+                    "id": p.id,
                     "nome": p.nome,
                     "especialidade": p.especialidade
                 }
@@ -41,6 +42,7 @@ class GerenciadorSistema:
 
             self.dados["ubs"] = [
                 {
+                    "id": u.id,
                     "nome": u.nome,
                     "endereco": u.endereco
                 }
@@ -50,8 +52,10 @@ class GerenciadorSistema:
             self.dados["consultas"] = [
                 {
                     "paciente_cpf": c.paciente_cpf,
-                    "profissional_nome": c.profissional_nome,
-                    "ubs_nome": c.ubs_nome,
+                    "profissional_id": c.profissional_id,
+                    "profissional_nome": c.profissional.nome,
+                    "ubs_id": c.ubs_id,
+                    "ubs_nome": c.ubs.nome,
                     "data": c.data,
                     "horario": c.horario,
                     "status": c.status
@@ -118,7 +122,7 @@ class GerenciadorSistema:
             consulta_existente = (
                 session.query(Consulta)
                 .filter(
-                    Consulta.profissional_nome == c.profissional_nome,
+                    Consulta.profissional_id == c.profissional_id,
                     Consulta.data == c.data,
                     Consulta.horario == c.horario,
                     Consulta.status == "Agendada"
@@ -128,13 +132,13 @@ class GerenciadorSistema:
 
             if consulta_existente:
                 raise ValueError(
-                    f"O médico {c.profissional_nome} já possui consulta neste horário!"
+                    "Este profissional já possui consulta neste horário!"
                 )
 
             consulta = Consulta(
                 paciente_cpf=c.paciente_cpf,
-                profissional_nome=c.profissional_nome,
-                ubs_nome=c.ubs_nome,
+                profissional_id=c.profissional_id,
+                ubs_id=c.ubs_id,
                 data=c.data,
                 horario=c.horario,
                 status=c.status

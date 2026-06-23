@@ -24,9 +24,9 @@ from interface.componentes import (
     ModalConsulta
 )
 
-from gerenciador import GerenciadorSistema
-from modelos import Paciente, Profissional, UBS, Consulta
-from threads import OperacaoArquivoWorker
+from cliente_api import ClienteAPI
+from dto import Paciente, Profissional, UBS, Consulta
+from threads import OperacaoArquivoWorker, CarregarDadosWorker
 
 
 class MainWindow(QMainWindow):
@@ -43,10 +43,22 @@ class MainWindow(QMainWindow):
             ESTILO_COMPONENTES
         )
 
-        self.gerenciador = GerenciadorSistema()
-
+        self.gerenciador = ClienteAPI()
         self.init_ui()
-        self.atualizar_todas_telas()
+        
+        #self.atualizar_todas_telas()
+        self.iniciar_carregamento_assincrono()
+    
+    # janela_principal.py
+    def iniciar_carregamento_assincrono(self):
+        # Instancia a thread
+        self.worker_leitura = CarregarDadosWorker(self.gerenciador)
+        
+        # Define que, ao terminar, a interface será atualizada
+        self.worker_leitura.dados_carregados.connect(self.atualizar_todas_telas)
+        
+        # Executa a requisição
+        self.worker_leitura.start()
 
     def init_ui(self):
 
@@ -500,7 +512,7 @@ class MainWindow(QMainWindow):
                 mensagem
             )
 
-        self.atualizar_todas_telas()
+        self.iniciar_carregamento_assincrono()
            
 
     def abrir_modal_paciente(self):
@@ -566,8 +578,8 @@ class MainWindow(QMainWindow):
 
             c = Consulta(
                 paciente_cpf=m.cb_p.currentData(),
-                profissional_nome=m.cb_pr.currentText(),
-                ubs_nome=m.cb_u.currentText(),
+                profissional_id=m.cb_pr.currentData(),
+                ubs_id=m.cb_u.currentData(),
                 data=m.date_edit.date().toString("dd/MM/yyyy"),
                 horario=m.time_edit.time().toString("hh:mm")
             )

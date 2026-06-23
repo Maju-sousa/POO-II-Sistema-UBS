@@ -281,11 +281,11 @@ class ModalConsulta(ModalBase):
 
         self.cb_pr = QComboBox()
         for pr in profissionais:
-            self.cb_pr.addItem(pr["nome"], pr["nome"])
+            self.cb_pr.addItem(pr["nome"], pr["id"])
 
         self.cb_u = QComboBox()
         for u in ubs_list:
-            self.cb_u.addItem(u["nome"], u["nome"])
+            self.cb_u.addItem(u["nome"], u["id"])
 
         self.date_edit = QDateEdit(QDate.currentDate())
         self.date_edit.setCalendarPopup(True) 

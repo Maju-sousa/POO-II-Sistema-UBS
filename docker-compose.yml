@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: ubs_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ubs_user
+      POSTGRES_PASSWORD: ubs_senha
+      POSTGRES_DB: ubs_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - dados_postgres:/var/lib/postgresql/data
+
+volumes:
+  dados_postgres:
