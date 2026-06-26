@@ -2,7 +2,7 @@
 
 Sistema desktop (PySide6) para cadastro de pacientes, profissionais, UBS
 e agendamento de consultas, persistindo os dados em um banco **PostgreSQL**
-que roda dentro de um **container Docker**.
+que roda dentro de um **container Dockr**.
 
 ## Arquitetura
 
